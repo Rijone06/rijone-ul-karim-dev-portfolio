@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rijone | Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container nav-wrap">
+        <a class="logo" href="#home" aria-label="Developer home">
+          <i class="ri-code-box-fill"></i>
+        </a>
+        <nav class="main-nav">
+          <a href="#home">Home</a>
+          <a href="#about">About</a>
+          <a href="#projects">Projects</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero section" id="home">
+        <div class="container hero-inner">
+          <h1>Hi, I'm <span>Rijone UI Karim</span></h1>
+          <h2>Web Developer</h2>
+          <p>
+            Crafting beautiful, responsive web experiences with modern
+            technologies.
+          </p>
+          <div class="hero-actions">
+            <a href="#projects" class="btn btn-primary"
+              ><i class="ri-eye-2-line"></i> View My Work</a
+            >
+            <a href="#contact" class="btn btn-outline"
+              ><i class="ri-mail-send-line"></i> Contact Me</a
+            >
+          </div>
+          <a href="#stack" class="scroll-down" aria-label="Scroll to tech stack">
+            <i class="ri-arrow-down-s-line"></i>
+          </a>
+        </div>
+      </section>
+
+      <section class="section stack glow-divider" id="stack">
+        <div class="container">
+          <h3 class="section-title">Tech <span>Stack</span></h3>
+          <div class="stack-grid">
+            <article class="stack-item"><i class="ri-html5-fill"></i>HTML</article>
+            <article class="stack-item"><i class="ri-css3-fill"></i>CSS</article>
+            <article class="stack-item"><i class="ri-javascript-fill"></i>JavaScript</article>
+            <article class="stack-item"><i class="ri-reactjs-line"></i>React</article>
+            <article class="stack-item"><i class="ri-nodejs-line"></i>Node.js</article>
+            <article class="stack-item"><i class="ri-git-branch-line"></i>Git</article>
+            <article class="stack-item"><i class="ri-windy-line"></i>Tailwind CSS</article>
+            <article class="stack-item"><i class="ri-code-s-slash-line"></i>TypeScript</article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section projects" id="projects">
+        <div class="container">
+          <h3 class="section-title">Featured <span>Projects</span></h3>
+          <div class="projects-grid">
+            <article class="project-card">
+              <div class="project-image image-one"></div>
+              <div class="project-content">
+                <h4>E-Commerce Platform</h4>
+                <p>
+                  A complete online shopping solution with product listings,
+                  cart flow, and secure checkout.
+                </p>
+                <div class="project-links">
+                  <a href="#"><i class="ri-external-link-line"></i>Live Demo</a>
+                  <a href="#"><i class="ri-github-line"></i>GitHub</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="project-image image-two"></div>
+              <div class="project-content">
+                <h4>Task Management App</h4>
+                <p>
+                  Productivity app featuring drag and drop task boards, filters,
+                  and team collaboration workflow.
+                </p>
+                <div class="project-links">
+                  <a href="#"><i class="ri-external-link-line"></i>Live Demo</a>
+                  <a href="#"><i class="ri-github-line"></i>GitHub</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="project-image image-three"></div>
+              <div class="project-content">
+                <h4>Weather Dashboard</h4>
+                <p>
+                  Live weather insights with multi-city search, forecast data,
+                  and clean data visual summaries.
+                </p>
+                <div class="project-links">
+                  <a href="#"><i class="ri-external-link-line"></i>Live Demo</a>
+                  <a href="#"><i class="ri-github-line"></i>GitHub</a>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section about glow-divider" id="about">
+        <div class="container about-wrap">
+          <h3 class="section-title">About <span>Me</span></h3>
+          <div class="about-grid">
+            <div class="about-avatar">
+              <div class="avatar-ring">
+                <i class="ri-user-3-line"></i>
+              </div>
+            </div>
+            <div class="about-content">
+              <p>
+                I'm a passionate web developer with year of experience
+                building modern, responsive, and user-focused interfaces.
+              </p>
+              <p>
+                I specialize in React, Node.js, JavaScript, Tailwind and creating smooth, engaging
+                digital experiences that balance design and performance.
+              </p>
+              <div class="stats">
+                <div><strong>5+</strong><small>Projects</small></div>
+                <div><strong>1+</strong><small>Year</small></div>
+                <div><strong>3+</strong><small>Clients</small></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section contact" id="contact">
+        <div class="container contact-wrap">
+          <h3 class="section-title">Get In <span>Touch</span></h3>
+          <p class="contact-subtitle">
+            Have a project in mind? Let's work together!
+          </p>
+          <form class="contact-form">
+            <label for="name">Name</label>
+            <input id="name" type="text" placeholder="Your name" />
+
+            <label for="email">Email</label>
+            <input id="email" type="email" placeholder="you@example.com" />
+
+            <label for="subject">Subject</label>
+            <input id="subject" type="text" placeholder="Project discussion" />
+
+            <label for="message">Message</label>
+            <textarea id="message" rows="5" placeholder="Tell me about your project"></textarea>
+
+            <button type="submit" class="btn btn-primary full">
+              <i class="ri-send-plane-fill"></i> Send Message
+            </button>
+          </form>
+
+          <div class="socials">
+            <a href="#" aria-label="GitHub"><i class="ri-github-fill"></i></a>
+            <a href="#" aria-label="LinkedIn"><i class="ri-linkedin-fill"></i></a>
+            <a href="#" aria-label="Email"><i class="ri-mail-fill"></i></a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <p>© 2026 Rijone UI Karim. All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
+</html>
