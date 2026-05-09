@@ -294,6 +294,30 @@ a {
   line-height: 1.45;
 }
 
+.project-tech {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.28rem;
+}
+
+.project-tech span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  font-size: 0.46rem;
+  color: #a5cfff;
+  border: 1px solid rgba(0, 193, 255, 0.28);
+  background: rgba(2, 17, 30, 0.75);
+  border-radius: 999px;
+  padding: 0.14rem 0.35rem;
+}
+
+.project-tech i {
+  color: #5fdaff;
+  font-size: 0.62rem;
+}
+
 .project-links {
   margin-top: 0.52rem;
   display: flex;
@@ -388,6 +412,10 @@ a {
   font-size: 0.5rem;
   color: #b6cae8;
   margin-bottom: 0.2rem;
+}
+
+.hidden-botcheck {
+  display: none;
 }
 
 .contact-form input,

@@ -82,6 +82,11 @@
                   A complete online shopping solution with product listings,
                   cart flow, and secure checkout.
                 </p>
+                <div class="project-tech">
+                  <span><i class="ri-reactjs-line"></i>React</span>
+                  <span><i class="ri-javascript-fill"></i>JavaScript</span>
+                  <span><i class="ri-css3-fill"></i>CSS</span>
+                </div>
                 <div class="project-links">
                   <a href="#"><i class="ri-external-link-line"></i>Live Demo</a>
                   <a href="#"><i class="ri-github-line"></i>GitHub</a>
@@ -97,6 +102,11 @@
                   Productivity app featuring drag and drop task boards, filters,
                   and team collaboration workflow.
                 </p>
+                <div class="project-tech">
+                  <span><i class="ri-reactjs-line"></i>React</span>
+                  <span><i class="ri-windy-line"></i>Tailwind</span>
+                  <span><i class="ri-code-s-slash-line"></i>TypeScript</span>
+                </div>
                 <div class="project-links">
                   <a href="#"><i class="ri-external-link-line"></i>Live Demo</a>
                   <a href="#"><i class="ri-github-line"></i>GitHub</a>
@@ -112,6 +122,11 @@
                   Live weather insights with multi-city search, forecast data,
                   and clean data visual summaries.
                 </p>
+                <div class="project-tech">
+                  <span><i class="ri-html5-fill"></i>HTML</span>
+                  <span><i class="ri-javascript-fill"></i>JavaScript</span>
+                  <span><i class="ri-bar-chart-box-line"></i>API</span>
+                </div>
                 <div class="project-links">
                   <a href="#"><i class="ri-external-link-line"></i>Live Demo</a>
                   <a href="#"><i class="ri-github-line"></i>GitHub</a>
@@ -156,18 +171,45 @@
           <p class="contact-subtitle">
             Have a project in mind? Let's work together!
           </p>
-          <form class="contact-form">
+          <form
+            class="contact-form"
+            action="https://api.web3forms.com/submit"
+            method="post"
+          >
+            <input type="hidden" name="access_key" value="e8f2d8c7-7b23-467a-9088-9d6a3bd0b7e5" />
+            <input type="hidden" name="subject" value="New portfolio contact message" />
+            <input type="hidden" name="from_name" value="Portfolio Contact Form" />
+            <input type="checkbox" name="botcheck" class="hidden-botcheck" tabindex="-1" autocomplete="off" />
+
             <label for="name">Name</label>
-            <input id="name" type="text" placeholder="Your name" />
+            <input id="name" name="Name" type="text" placeholder="Your name" required />
 
             <label for="email">Email</label>
-            <input id="email" type="email" placeholder="you@example.com" />
+            <input
+              id="email"
+              name="Email"
+              type="email"
+              placeholder="you@example.com"
+              required
+            />
 
             <label for="subject">Subject</label>
-            <input id="subject" type="text" placeholder="Project discussion" />
+            <input
+              id="subject"
+              name="Subject"
+              type="text"
+              placeholder="Project discussion"
+              required
+            />
 
             <label for="message">Message</label>
-            <textarea id="message" rows="5" placeholder="Tell me about your project"></textarea>
+            <textarea
+              id="message"
+              name="Message"
+              rows="5"
+              placeholder="Tell me about your project"
+              required
+            ></textarea>
 
             <button type="submit" class="btn btn-primary full">
               <i class="ri-send-plane-fill"></i> Send Message
@@ -176,8 +218,14 @@
 
           <div class="socials">
             <a href="https://github.com/Rijone06" aria-label="GitHub"><i class="ri-github-fill"></i></a>
-            <a href="https://linkedin.com/in/rijone-ul-karim" aria-label="LinkedIn"><i class="ri-linkedin-fill"></i></a>
-            <a href="https://mail.google.com/rijone.cse@gmail.com" aria-label="Email"><i class="ri-mail-fill"></i></a>
+            <a href="https://linkedin.com/in/Rijone06" aria-label="LinkedIn"><i class="ri-linkedin-fill"></i></a>
+            <a
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=rijone.cse@gmail.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Email"
+              ><i class="ri-mail-fill"></i
+            ></a>
           </div>
         </div>
       </section>
