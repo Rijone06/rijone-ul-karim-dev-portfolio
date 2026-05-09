@@ -22,9 +22,14 @@ service cloud.firestore {
         && request.resource.data.displayName is string
         && request.resource.data.displayName.size() <= 120
         && ratingsPhotoOk(request.resource.data);
-      allow delete: if request.auth != null
-        && request.auth.uid == userId
-        && request.auth.token.email.matches('.*@gmail\\.com$|.*@googlemail\\.com$');
+      // Deletes: (1) reviewer with Gmail (2) OR portfolio admin UID below = same value as PORTFOLIO_ADMIN_FIREBASE_UID in js/ratings.js (Auth → Users → User UID)
+      allow delete: if request.auth != null && (
+        (
+          request.auth.uid == userId
+          && request.auth.token.email.matches('.*@gmail\\.com$|.*@googlemail\\.com$')
+        )
+        || request.auth.uid == 'JDsE32FGefOvzFYehG0KWPbnY3C2'
+      );
     }
   }
 }

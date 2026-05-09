@@ -31,6 +31,19 @@ const firebaseConfig = {
   appId: "1:1043391642862:web:03d26150848a432f5947ff",
 };
 
+// Paste your Firebase Auth “User UID” (Authentication → Users) to unlock “Admin remove” on reviews.
+// Must match the string in firestore.rules (REPLACE_WITH_PORTFOLIO_ADMIN_FIREBASE_UID → same value).
+const PORTFOLIO_ADMIN_FIREBASE_UID = "";
+
+function isPortfolioAdminAccount(user) {
+  var id =
+    typeof PORTFOLIO_ADMIN_FIREBASE_UID === "JDsE32FGefOvzFYehG0KWPbnY3C2"
+      ? PORTFOLIO_ADMIN_FIREBASE_UID.trim()
+      : "";
+  if (!user || id.length < 10 || id.includes("REPLACE")) return false;
+  return user.uid === id;
+}
+
 function configIsReady(cfg) {
   if (!cfg || !cfg.apiKey || !cfg.projectId) return false;
   const bad = (v) => typeof v === "string" && (v.includes("YOUR_") || v === "");
@@ -243,27 +256,57 @@ function initRatingsUi() {
   });
   syncStarPicker();
 
-  async function deleteRatingFor(uid) {
-    if (!confirm("Remove this published review permanently from this portfolio?")) return;
+  async function deleteRatingFor(targetDocUid) {
     var u = auth.currentUser;
-    if (!db || !u || u.uid !== uid) {
+    if (!db || !u || !targetDocUid) {
       if (formStatus) {
-        formStatus.textContent = "Sign in as the reviewer who owns this rating to delete it.";
+        formStatus.textContent = "Sign in to delete reviews.";
         formStatus.className = "form-status error";
       }
       return;
     }
+
+    var ownerDeletingOwn = u.uid === targetDocUid;
+    var actingAsAdmin = isPortfolioAdminAccount(u);
+
+    if (!ownerDeletingOwn && !actingAsAdmin) {
+      if (formStatus) {
+        formStatus.textContent = "Only the reviewer (or site admin) can remove a review.";
+        formStatus.className = "form-status error";
+      }
+      return;
+    }
+
+    if (ownerDeletingOwn && !actingAsAdmin && !isGmailAddress(u.email)) {
+      if (formStatus) {
+        formStatus.textContent = "Use your Gmail-signed account to manage your review.";
+        formStatus.className = "form-status error";
+      }
+      return;
+    }
+
+    var confirmMsg = ownerDeletingOwn
+      ? "Delete your published review permanently from this portfolio?"
+      : "Remove this client’s review as site admin? This cannot be undone.";
+
+    if (!confirm(confirmMsg)) return;
+
     if (formStatus) {
-      formStatus.textContent = "Deleting your review…";
+      formStatus.textContent = ownerDeletingOwn ? "Deleting your review…" : "Removing review…";
       formStatus.className = "form-status";
     }
+
     try {
-      await deleteDoc(doc(db, "ratings", uid));
-      selectedRating = 0;
-      syncStarPicker();
-      if (commentEl) commentEl.value = "";
+      await deleteDoc(doc(db, "ratings", targetDocUid));
+      if (ownerDeletingOwn) {
+        selectedRating = 0;
+        syncStarPicker();
+        if (commentEl) commentEl.value = "";
+      }
       if (formStatus) {
-        formStatus.textContent = "Your review has been removed.";
+        formStatus.textContent = ownerDeletingOwn
+          ? "Your review has been removed."
+          : "Review removed (admin).";
         formStatus.className = "form-status success";
       }
       clearAuthHint();
@@ -271,7 +314,7 @@ function initRatingsUi() {
       if (formStatus) {
         formStatus.textContent =
           err.message ||
-          "Could not delete. In Firebase Console, publish firestore.rules that allow deletes for rated users.";
+          "Delete failed — check Firestore rules (owner delete + matching admin UID) and publish.";
         formStatus.className = "form-status error";
       }
     }
@@ -569,16 +612,41 @@ function initRatingsUi() {
 
         rowTop.appendChild(stars);
 
-        if (currentUid && currentUid === row.id) {
-          var delBtn = document.createElement("button");
-          delBtn.type = "button";
-          delBtn.className = "rating-delete-btn";
-          delBtn.innerHTML = '<i class="ri-delete-bin-line" aria-hidden="true"></i> Delete';
-          delBtn.title = "Remove my review";
-          delBtn.addEventListener("click", function () {
+        var actionWrap = document.createElement("div");
+        actionWrap.className = "rating-card__actions";
+
+        var reviewerSignedInUid = auth.currentUser ? auth.currentUser.uid : null;
+        var viewerIsPortfolioAdmin =
+          auth.currentUser && isPortfolioAdminAccount(auth.currentUser);
+
+        if (currentUid === row.id) {
+          var userDel = document.createElement("button");
+          userDel.type = "button";
+          userDel.className = "rating-delete-btn rating-delete-btn--user";
+          userDel.innerHTML =
+            '<i class="ri-delete-bin-line" aria-hidden="true"></i> Delete my review';
+          userDel.title = "Remove your rating and comment";
+          userDel.addEventListener("click", function () {
             deleteRatingFor(row.id);
           });
-          rowTop.appendChild(delBtn);
+          actionWrap.appendChild(userDel);
+        }
+
+        if (viewerIsPortfolioAdmin && reviewerSignedInUid && row.id !== reviewerSignedInUid) {
+          var adminDel = document.createElement("button");
+          adminDel.type = "button";
+          adminDel.className = "rating-admin-delete-btn";
+          adminDel.innerHTML =
+            '<i class="ri-shield-star-line" aria-hidden="true"></i> Admin remove';
+          adminDel.title = "Remove this review as site owner (portfolio admin UID)";
+          adminDel.addEventListener("click", function () {
+            deleteRatingFor(row.id);
+          });
+          actionWrap.appendChild(adminDel);
+        }
+
+        if (actionWrap.childNodes.length > 0) {
+          rowTop.appendChild(actionWrap);
         }
 
         bodyEl.appendChild(rowTop);
