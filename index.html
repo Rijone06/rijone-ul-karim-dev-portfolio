@@ -78,7 +78,7 @@
       <section class="section projects" id="projects">
         <div class="container">
           <h3 class="section-title">Featured <span>Projects</span></h3>
-          <div class="projects-grid">
+          <div class="projects-grid" id="projects-carousel">
             <article class="project-card">
               <div class="project-image image-one"></div>
               <div class="project-content">
@@ -249,6 +249,7 @@
         const cvBtn = document.getElementById("download-cv-btn");
         const contactForm = document.getElementById("contact-form");
         const formStatus = document.getElementById("form-status");
+        const projectsCarousel = document.getElementById("projects-carousel");
 
         const isMobile = /Android|iPhone|iPad|iPod|IEMobile|Opera Mini/i.test(
           navigator.userAgent
@@ -258,6 +259,40 @@
           cvBtn.removeAttribute("download");
           cvBtn.setAttribute("target", "_blank");
           cvBtn.setAttribute("rel", "noopener noreferrer");
+        }
+
+        if (projectsCarousel) {
+          const cards = Array.from(projectsCarousel.querySelectorAll(".project-card"));
+          const setCenteredCard = function () {
+            const box = projectsCarousel.getBoundingClientRect();
+            const centerX = box.left + box.width / 2;
+            let nearestCard = null;
+            let minDistance = Number.POSITIVE_INFINITY;
+
+            cards.forEach((card) => {
+              const cardBox = card.getBoundingClientRect();
+              const cardCenter = cardBox.left + cardBox.width / 2;
+              const distance = Math.abs(centerX - cardCenter);
+              if (distance < minDistance) {
+                minDistance = distance;
+                nearestCard = card;
+              }
+              card.classList.remove("featured-center");
+            });
+
+            if (nearestCard) nearestCard.classList.add("featured-center");
+          };
+
+          setCenteredCard();
+          projectsCarousel.addEventListener("scroll", setCenteredCard, { passive: true });
+          window.addEventListener("resize", setCenteredCard);
+
+          cards.forEach((card) => {
+            card.addEventListener("touchstart", function () {
+              cards.forEach((item) => item.classList.remove("featured-center"));
+              card.classList.add("featured-center");
+            });
+          });
         }
 
         if (contactForm) {

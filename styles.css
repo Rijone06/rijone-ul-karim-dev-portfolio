@@ -279,17 +279,49 @@ a {
 }
 
 .projects-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  display: flex;
   gap: 0.7rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding: 0.5rem 0.2rem 0.6rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.projects-grid::-webkit-scrollbar {
+  height: 0;
+}
+
+.projects-grid {
+  scrollbar-width: none;
 }
 
 .project-card {
+  flex: 0 0 clamp(230px, 30vw, 280px);
   background: linear-gradient(155deg, rgba(17, 32, 54, 0.96), rgba(10, 20, 35, 0.84));
   border: 1px solid rgba(91, 134, 194, 0.32);
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 12px 30px rgba(2, 6, 14, 0.45);
+  scroll-snap-align: center;
+  transform-origin: center center;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-3px) scale(1.03);
+  border-color: rgba(0, 204, 255, 0.58);
+  box-shadow: 0 16px 34px rgba(0, 142, 220, 0.24);
+}
+
+.project-card:active {
+  transform: scale(1.03);
+}
+
+.project-card.featured-center {
+  transform: scale(1.06);
+  border-color: rgba(0, 204, 255, 0.62);
+  box-shadow: 0 20px 38px rgba(0, 142, 220, 0.28);
 }
 
 .project-image {
@@ -498,14 +530,14 @@ a {
 }
 
 .socials a {
-  width: 24px;
+  width: 30px;
   aspect-ratio: 1;
   border-radius: 50%;
   display: grid;
   place-items: center;
   border: 1px solid rgba(92, 135, 194, 0.4);
   color: #87e8ff;
-  font-size: 0.76rem;
+  font-size: 0.95rem;
   background: rgba(14, 31, 53, 0.85);
   transition: all 0.2s ease;
 }
@@ -580,9 +612,7 @@ a {
   }
 
   .projects-grid {
-    grid-template-columns: 1fr;
-    max-width: 390px;
-    margin: 0 auto;
+    max-width: 100%;
   }
 
   .about-grid {
@@ -628,6 +658,14 @@ a {
   .stack-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     max-width: 360px;
+  }
+
+  .project-card {
+    flex-basis: min(86vw, 310px);
+  }
+
+  .project-card.featured-center {
+    transform: scale(1.03);
   }
 
   .hero-actions {
