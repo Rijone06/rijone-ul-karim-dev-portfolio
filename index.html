@@ -47,6 +47,7 @@
             <a
               href="assets/Rijone-Web-Developer-CV.pdf"
               download="Rijone-Web-Developer-CV.pdf"
+              id="download-cv-btn"
               class="btn btn-outline"
             >
               <i class="ri-download-2-line"></i> Download CV
@@ -240,5 +241,21 @@
         <p>© 2026 Rijone UI Karim. All rights reserved.</p>
       </div>
     </footer>
+    <script>
+      (function () {
+        const cvBtn = document.getElementById("download-cv-btn");
+        if (!cvBtn) return;
+
+        const isMobile = /Android|iPhone|iPad|iPod|IEMobile|Opera Mini/i.test(
+          navigator.userAgent
+        );
+
+        if (isMobile) {
+          cvBtn.removeAttribute("download");
+          cvBtn.setAttribute("target", "_blank");
+          cvBtn.setAttribute("rel", "noopener noreferrer");
+        }
+      })();
+    </script>
   </body>
 </html>
