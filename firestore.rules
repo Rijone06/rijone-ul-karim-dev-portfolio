@@ -1,0 +1,21 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /ratings/{userId} {
+      allow read: if true;
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && request.auth.token.email.matches('.*@gmail\\.com$|.*@googlemail\\.com$')
+        && request.resource.data.email == request.auth.token.email
+        && request.resource.data.rating is int
+        && request.resource.data.rating >= 1
+        && request.resource.data.rating <= 5
+        && request.resource.data.comment is string
+        && request.resource.data.comment.size() >= 1
+        && request.resource.data.comment.size() <= 2000
+        && request.resource.data.displayName is string
+        && request.resource.data.displayName.size() <= 120;
+      allow delete: if false;
+    }
+  }
+}

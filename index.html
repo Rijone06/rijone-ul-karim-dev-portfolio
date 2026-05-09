@@ -26,6 +26,7 @@
           <a href="#home">Home</a>
           <a href="#about">About</a>
           <a href="#projects">Projects</a>
+          <a href="#ratings">Ratings</a>
           <a href="#contact">Contact</a>
         </nav>
       </div>
@@ -161,12 +162,111 @@
                 digital experiences that balance design and performance.
               </p>
               <div class="stats">
-                <div><strong>1+</strong><small>Projects</small></div>
-                <div><strong>0+</strong><small>Yearss</small></div>
+                <div><strong>0+</strong><small>Projects</small></div>
+                <div><strong>0+</strong><small>Years</small></div>
                 <div><strong>0+</strong><small>Clients</small></div>
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section class="section ratings" id="ratings">
+        <div class="container">
+          <h3 class="section-title">Client <span>Ratings</span></h3>
+          <p class="ratings-lede">
+            Clients sign in with a personal Gmail account, leave a star rating, and a short comment.
+            Reviews appear here in real time.
+          </p>
+
+          <p id="ratings-config-banner" class="ratings-banner hidden" role="status"></p>
+
+          <div class="ratings-summary" id="ratings-summary-header">
+            <div class="ratings-score">
+              <span class="ratings-number" id="avg-rating">—</span>
+              <div
+                class="ratings-stars"
+                id="avg-stars"
+                aria-hidden="true"
+              ></div>
+            </div>
+            <p class="ratings-meta" id="ratings-count">Loading reviews…</p>
+          </div>
+
+          <div class="ratings-auth-panel">
+            <div id="ratings-signed-out">
+              <p class="ratings-auth-lede">
+                Sign in with <strong>Google using a Gmail address</strong> (@gmail.com or
+                @googlemail.com) to submit or update your rating.
+              </p>
+              <button type="button" class="btn btn-primary ratings-google-btn" id="ratings-google-btn">
+                <i class="ri-google-fill"></i>
+                Continue with Google
+              </button>
+            </div>
+
+            <div id="ratings-signed-in" class="hidden">
+              <div class="ratings-user-bar">
+                <p class="ratings-signed-in-as">
+                  Signed in as <span id="ratings-user-email"></span>
+                </p>
+                <button type="button" class="btn btn-outline btn-tight" id="ratings-sign-out">
+                  Sign out
+                </button>
+              </div>
+
+              <p id="ratings-auth-hint" class="ratings-auth-hint hidden" role="status"></p>
+
+              <form id="ratings-form" class="ratings-form" action="#ratings" novalidate>
+                <fieldset class="rating-fieldset">
+                  <legend class="ratings-form-label">Your rating</legend>
+                  <div
+                    class="rating-star-picker"
+                    role="group"
+                    aria-label="Choose from 1 to 5 stars"
+                  >
+                    <button type="button" class="rating-star-btn" data-rating-star="1" aria-pressed="false" aria-label="1 star">
+                      <i class="ri-star-fill"></i>
+                    </button>
+                    <button type="button" class="rating-star-btn" data-rating-star="2" aria-pressed="false" aria-label="2 stars">
+                      <i class="ri-star-fill"></i>
+                    </button>
+                    <button type="button" class="rating-star-btn" data-rating-star="3" aria-pressed="false" aria-label="3 stars">
+                      <i class="ri-star-fill"></i>
+                    </button>
+                    <button type="button" class="rating-star-btn" data-rating-star="4" aria-pressed="false" aria-label="4 stars">
+                      <i class="ri-star-fill"></i>
+                    </button>
+                    <button type="button" class="rating-star-btn" data-rating-star="5" aria-pressed="false" aria-label="5 stars">
+                      <i class="ri-star-fill"></i>
+                    </button>
+                  </div>
+                  <input type="hidden" id="rating-star-input" name="rating" value="" />
+                </fieldset>
+
+                <label class="ratings-form-label" for="rating-comment">Comment</label>
+                <textarea
+                  id="rating-comment"
+                  name="comment"
+                  rows="4"
+                  maxlength="2000"
+                  placeholder="Share how the collaboration went (max 2000 characters)"
+                  required
+                ></textarea>
+
+                <button type="submit" class="btn btn-primary full">
+                  <i class="ri-send-plane-fill"></i>
+                  Publish rating
+                </button>
+                <p id="ratings-form-status" class="form-status" aria-live="polite"></p>
+              </form>
+            </div>
+          </div>
+
+          <div class="ratings-grid" id="ratings-list"></div>
+          <p id="ratings-empty" class="ratings-empty hidden">
+            No public reviews yet. Be the first to leave one after signing in with Gmail.
+          </p>
         </div>
       </section>
 
@@ -337,6 +437,30 @@
           });
         }
       })();
+    </script>
+    <script>
+      (function () {
+        if (location.protocol !== "file:") return;
+        document.addEventListener("DOMContentLoaded", function () {
+          var b = document.getElementById("ratings-config-banner");
+          if (!b) return;
+          b.classList.remove("hidden");
+          b.innerHTML =
+            "<strong>This page was opened as a local file.</strong> The ratings script (ES modules) and Google sign-in usually will not work. From this project folder run a small web server, for example <code>npx --yes serve .</code>, then open the URL it prints (often <code>http://localhost:3000</code>).";
+        });
+      })();
+    </script>
+    <script type="module" src="js/ratings.js"></script>
+    <script>
+      window.setTimeout(function () {
+        if (window.__portfolioRatingsReady) return;
+        var b = document.getElementById("ratings-config-banner");
+        if (!b) return;
+        b.classList.remove("hidden");
+        b.innerHTML =
+          "<strong>The ratings script did not finish loading.</strong> Common causes: opening the site as <code>file:///</code> (double-clicking the HTML file), a blocked script, or <code>js/ratings.js</code> missing on the server. " +
+          "Fix: open your site on GitHub Pages (<code>https://yourname.github.io/...</code>) after pushing, or use <code>http://localhost</code> with Live Server. Press F12 → Console to see errors.";
+      }, 3000);
     </script>
   </body>
 </html>
