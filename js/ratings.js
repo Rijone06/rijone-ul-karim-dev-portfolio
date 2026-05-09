@@ -31,17 +31,17 @@ const firebaseConfig = {
   appId: "1:1043391642862:web:03d26150848a432f5947ff",
 };
 
-// Paste your Firebase Auth “User UID” (Authentication → Users) to unlock “Admin remove” on reviews.
-// Must match the string in firestore.rules (REPLACE_WITH_PORTFOLIO_ADMIN_FIREBASE_UID → same value).
-const PORTFOLIO_ADMIN_FIREBASE_UID = "";
+// Must match Firebase Auth → Users → User UID for the Google account that may “Admin remove” reviews.
+// Must equal the UID string in firestore.rules (inside request.auth.uid == '...').
+const PORTFOLIO_ADMIN_FIREBASE_UID = "JDsE32FGefOvzFYehG0KWPbnY3C2";
 
 function isPortfolioAdminAccount(user) {
-  var id =
-    typeof PORTFOLIO_ADMIN_FIREBASE_UID === "JDsE32FGefOvzFYehG0KWPbnY3C2"
+  var raw =
+    typeof PORTFOLIO_ADMIN_FIREBASE_UID === "string"
       ? PORTFOLIO_ADMIN_FIREBASE_UID.trim()
       : "";
-  if (!user || id.length < 10 || id.includes("REPLACE")) return false;
-  return user.uid === id;
+  if (!user || raw.length < 10 || raw.includes("REPLACE")) return false;
+  return user.uid === raw;
 }
 
 function configIsReady(cfg) {
