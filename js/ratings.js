@@ -13,6 +13,7 @@ import {
   doc,
   getDoc,
   setDoc,
+  deleteDoc,
   collection,
   query,
   orderBy,
@@ -50,6 +51,70 @@ function maskEmail(email) {
   const domain = parts[1];
   const masked = local.length <= 1 ? `${local || "?"}*` : `${local[0]}***`;
   return `${masked}@${domain}`;
+}
+
+function initialsFrom(displayName, email) {
+  if (displayName && String(displayName).trim())
+    return String(displayName).trim()[0].toUpperCase();
+  if (email && email[0]) return email[0].toUpperCase();
+  return "?";
+}
+
+function createFallbackAvatar(displayName, email) {
+  const span = document.createElement("span");
+  span.className = "rating-avatar-initial";
+  span.textContent = initialsFrom(displayName, email);
+  return span;
+}
+
+function updateSessionChip(user, sessionPhoto, sessionInitial) {
+  if (!sessionPhoto || !sessionInitial) return;
+
+  sessionPhoto.onload = function () {
+    sessionPhoto.classList.remove("hidden");
+    sessionInitial.classList.add("hidden");
+  };
+
+  sessionPhoto.onerror = function () {
+    sessionPhoto.classList.add("hidden");
+    sessionInitial.classList.remove("hidden");
+    sessionPhoto.removeAttribute("src");
+    sessionInitial.textContent = initialsFrom(user.displayName, user.email);
+  };
+
+  const url = user.photoURL && String(user.photoURL).trim();
+
+  sessionInitial.textContent = initialsFrom(user.displayName, user.email);
+
+  if (url) {
+    sessionPhoto.classList.add("hidden");
+    sessionInitial.classList.remove("hidden");
+    sessionPhoto.src = url;
+  } else {
+    sessionPhoto.removeAttribute("src");
+    sessionPhoto.classList.add("hidden");
+    sessionInitial.classList.remove("hidden");
+  }
+}
+
+function appendRatingAvatar(wrapEl, row) {
+  wrapEl.innerHTML = "";
+  const trimmed = row.photoURL && String(row.photoURL).trim();
+
+  if (trimmed) {
+    const img = document.createElement("img");
+    img.className = "rating-avatar-img";
+    img.alt = "";
+    img.loading = "lazy";
+    img.referrerPolicy = "no-referrer";
+    img.src = trimmed;
+    img.onerror = function () {
+      wrapEl.replaceChildren(createFallbackAvatar(row.displayName, row.email));
+    };
+    wrapEl.appendChild(img);
+  } else {
+    wrapEl.appendChild(createFallbackAvatar(row.displayName, row.email));
+  }
 }
 
 function renderStarRow(rating) {
@@ -93,6 +158,9 @@ function initRatingsUi() {
   const form = el("ratings-form");
   const commentEl = el("rating-comment");
   const formStatus = el("ratings-form-status");
+  const sessionPhoto = el("ratings-session-photo");
+  const sessionInitial = el("ratings-session-initial");
+  const deleteMineBtn = el("ratings-delete-my-review");
 
   function showMisconfigBanner() {
     if (banner) {
@@ -175,6 +243,51 @@ function initRatingsUi() {
   });
   syncStarPicker();
 
+  async function deleteRatingFor(uid) {
+    if (!confirm("Remove this published review permanently from this portfolio?")) return;
+    var u = auth.currentUser;
+    if (!db || !u || u.uid !== uid) {
+      if (formStatus) {
+        formStatus.textContent = "Sign in as the reviewer who owns this rating to delete it.";
+        formStatus.className = "form-status error";
+      }
+      return;
+    }
+    if (formStatus) {
+      formStatus.textContent = "Deleting your review…";
+      formStatus.className = "form-status";
+    }
+    try {
+      await deleteDoc(doc(db, "ratings", uid));
+      selectedRating = 0;
+      syncStarPicker();
+      if (commentEl) commentEl.value = "";
+      if (formStatus) {
+        formStatus.textContent = "Your review has been removed.";
+        formStatus.className = "form-status success";
+      }
+      clearAuthHint();
+    } catch (err) {
+      if (formStatus) {
+        formStatus.textContent =
+          err.message ||
+          "Could not delete. In Firebase Console, publish firestore.rules that allow deletes for rated users.";
+        formStatus.className = "form-status error";
+      }
+    }
+  }
+
+  if (deleteMineBtn) {
+    deleteMineBtn.addEventListener("click", function () {
+      var u = auth.currentUser;
+      if (u && isGmailAddress(u.email)) deleteRatingFor(u.uid);
+      else if (formStatus) {
+        formStatus.textContent = "Sign in with Gmail to remove your review.";
+        formStatus.className = "form-status error";
+      }
+    });
+  }
+
   async function loadMyRating(uid) {
     if (!db || !uid) return;
     const snap = await getDoc(doc(db, "ratings", uid));
@@ -212,6 +325,16 @@ function initRatingsUi() {
       selectedRating = 0;
       syncStarPicker();
       if (commentEl) commentEl.value = "";
+      if (sessionPhoto) {
+        sessionPhoto.removeAttribute("src");
+        sessionPhoto.classList.add("hidden");
+      }
+      if (sessionInitial) {
+        sessionInitial.textContent = "?";
+        sessionInitial.classList.remove("hidden");
+      }
+      if (signedOut) signedOut.setAttribute("aria-hidden", "false");
+      if (signedIn) signedIn.setAttribute("aria-hidden", "true");
       return;
     }
 
@@ -229,9 +352,12 @@ function initRatingsUi() {
 
     setVisible(signedOut, false);
     setVisible(signedIn, true);
+    if (signedOut) signedOut.setAttribute("aria-hidden", "true");
+    if (signedIn) signedIn.setAttribute("aria-hidden", "false");
     if (userEmailEl) {
       userEmailEl.textContent = user.email || "";
     }
+    updateSessionChip(user, sessionPhoto, sessionInitial);
     await loadMyRating(user.uid);
   });
 
@@ -348,17 +474,20 @@ function initRatingsUi() {
           (user.displayName && user.displayName.trim()) ||
           (user.email ? user.email.split("@")[0] : "Client");
 
-        await setDoc(
-          doc(db, "ratings", user.uid),
-          {
-            email: user.email,
-            displayName: displayName.slice(0, 120),
-            rating: r,
-            comment: comment.slice(0, 2000),
-            updatedAt: serverTimestamp(),
-          },
-          { merge: true }
-        );
+        var payload = {
+          email: user.email,
+          displayName: displayName.slice(0, 120),
+          rating: r,
+          comment: comment.slice(0, 2000),
+          updatedAt: serverTimestamp(),
+        };
+        var pUrl =
+          typeof user.photoURL === "string" && user.photoURL.trim()
+            ? user.photoURL.trim().slice(0, 2048)
+            : null;
+        if (pUrl) payload.photoURL = pUrl;
+
+        await setDoc(doc(db, "ratings", user.uid), payload, { merge: true });
 
         if (formStatus) {
           formStatus.textContent = "Thank you — your rating is live on this page.";
@@ -400,11 +529,15 @@ function initRatingsUi() {
         }
       }
       if (countMeta) {
-        countMeta.textContent = n === 0 ? "No reviews yet — be the first." : `Average · ${n} review${n === 1 ? "" : "s"}`;
+        countMeta.textContent =
+          n === 0
+            ? "No verified reviews yet — add yours from the sidebar."
+            : `${n} verified review${n === 1 ? "" : "s"} · live average`;
       }
 
       if (!list) return;
       list.innerHTML = "";
+      list.setAttribute("aria-busy", "false");
 
       if (docs.length === 0) {
         setVisible(emptyState, true);
@@ -412,35 +545,69 @@ function initRatingsUi() {
       }
       setVisible(emptyState, false);
 
-      docs.forEach((row) => {
-        const card = document.createElement("article");
+      const currentUid = auth.currentUser ? auth.currentUser.uid : null;
+
+      docs.forEach(function (row) {
+        var card = document.createElement("article");
         card.className = "rating-card";
 
-        const stars = document.createElement("div");
+        var top = document.createElement("div");
+        top.className = "rating-card__top";
+
+        var avWrap = document.createElement("div");
+        avWrap.className = "rating-avatar-wrap";
+        appendRatingAvatar(avWrap, row);
+
+        var bodyEl = document.createElement("div");
+        bodyEl.className = "rating-card__body";
+        var rowTop = document.createElement("div");
+        rowTop.className = "rating-card__row";
+        var stars = document.createElement("div");
         stars.className = "rating-stars";
         stars.setAttribute("aria-label", `${row.rating} out of 5 stars`);
         stars.appendChild(renderStarRow(row.rating));
 
-        const quote = document.createElement("blockquote");
+        rowTop.appendChild(stars);
+
+        if (currentUid && currentUid === row.id) {
+          var delBtn = document.createElement("button");
+          delBtn.type = "button";
+          delBtn.className = "rating-delete-btn";
+          delBtn.innerHTML = '<i class="ri-delete-bin-line" aria-hidden="true"></i> Delete';
+          delBtn.title = "Remove my review";
+          delBtn.addEventListener("click", function () {
+            deleteRatingFor(row.id);
+          });
+          rowTop.appendChild(delBtn);
+        }
+
+        bodyEl.appendChild(rowTop);
+
+        var quote = document.createElement("blockquote");
         quote.className = "rating-quote";
         quote.textContent = row.comment || "";
 
-        const footer = document.createElement("footer");
-        footer.className = "rating-footer";
+        var identity = document.createElement("div");
+        identity.className = "rating-card__identity";
 
-        const name = document.createElement("span");
-        name.className = "rating-name";
-        name.textContent = row.displayName || "Client";
+        var nameSpan = document.createElement("span");
+        nameSpan.className = "rating-name";
+        nameSpan.textContent = row.displayName || "Verified client";
 
-        const role = document.createElement("span");
-        role.className = "rating-role";
-        role.textContent = row.email ? `${maskEmail(row.email)} · Gmail verified` : "Gmail verified";
+        var roleSpan = document.createElement("span");
+        roleSpan.className = "rating-role";
+        roleSpan.textContent = row.email
+          ? `${maskEmail(row.email)} · Gmail verified`
+          : "Gmail verified";
 
-        footer.appendChild(name);
-        footer.appendChild(role);
-        card.appendChild(stars);
+        identity.appendChild(nameSpan);
+        identity.appendChild(roleSpan);
+
+        top.appendChild(avWrap);
+        top.appendChild(bodyEl);
+        card.appendChild(top);
         card.appendChild(quote);
-        card.appendChild(footer);
+        card.appendChild(identity);
         list.appendChild(card);
       });
     },

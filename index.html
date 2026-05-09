@@ -79,66 +79,72 @@
       <section class="section projects" id="projects">
         <div class="container">
           <h3 class="section-title">Featured <span>Projects</span></h3>
-          <div class="projects-grid" id="projects-carousel">
-            <article class="project-card">
-              <div class="project-image image-one"></div>
-              <div class="project-content">
-                <h4>E-Commerce Platform</h4>
-                <p>
-                  A complete online shopping solution with product listings,
-                  cart flow, and secure checkout.
-                </p>
-                <div class="project-tech">
-                  <span><i class="ri-reactjs-line"></i>React</span>
-                  <span><i class="ri-javascript-fill"></i>JavaScript</span>
-                  <span><i class="ri-css3-fill"></i>CSS</span>
+          <div
+            class="projects-carousel-mask"
+            role="region"
+            aria-label="Featured projects. Swipe or drag sideways."
+          >
+            <div class="projects-grid projects-carousel-track" id="projects-carousel">
+              <article class="project-card">
+                <div class="project-image image-one"></div>
+                <div class="project-content">
+                  <h4>E-Commerce Platform</h4>
+                  <p>
+                    A complete online shopping solution with product listings,
+                    cart flow, and secure checkout.
+                  </p>
+                  <div class="project-tech">
+                    <span><i class="ri-reactjs-line"></i>React</span>
+                    <span><i class="ri-javascript-fill"></i>JavaScript</span>
+                    <span><i class="ri-css3-fill"></i>CSS</span>
+                  </div>
+                  <div class="project-links">
+                    <a href="#"><i class="ri-external-link-line"></i>Live Demo</a>
+                    <a href="#"><i class="ri-github-line"></i>GitHub</a>
+                  </div>
                 </div>
-                <div class="project-links">
-                  <a href="#"><i class="ri-external-link-line"></i>Live Demo</a>
-                  <a href="#"><i class="ri-github-line"></i>GitHub</a>
-                </div>
-              </div>
-            </article>
+              </article>
 
-            <article class="project-card">
-              <div class="project-image image-two"></div>
-              <div class="project-content">
-                <h4>Task Management App</h4>
-                <p>
-                  Productivity app featuring drag and drop task boards, filters,
-                  and team collaboration workflow.
-                </p>
-                <div class="project-tech">
-                  <span><i class="ri-reactjs-line"></i>React</span>
-                  <span><i class="ri-windy-line"></i>Tailwind</span>
-                  <span><i class="ri-code-s-slash-line"></i>TypeScript</span>
+              <article class="project-card">
+                <div class="project-image image-two"></div>
+                <div class="project-content">
+                  <h4>Task Management App</h4>
+                  <p>
+                    Productivity app featuring drag and drop task boards, filters,
+                    and team collaboration workflow.
+                  </p>
+                  <div class="project-tech">
+                    <span><i class="ri-reactjs-line"></i>React</span>
+                    <span><i class="ri-windy-line"></i>Tailwind</span>
+                    <span><i class="ri-code-s-slash-line"></i>TypeScript</span>
+                  </div>
+                  <div class="project-links">
+                    <a href="#"><i class="ri-external-link-line"></i>Live Demo</a>
+                    <a href="#"><i class="ri-github-line"></i>GitHub</a>
+                  </div>
                 </div>
-                <div class="project-links">
-                  <a href="#"><i class="ri-external-link-line"></i>Live Demo</a>
-                  <a href="#"><i class="ri-github-line"></i>GitHub</a>
-                </div>
-              </div>
-            </article>
+              </article>
 
-            <article class="project-card">
-              <div class="project-image image-three"></div>
-              <div class="project-content">
-                <h4>Weather Dashboard</h4>
-                <p>
-                  Live weather insights with multi-city search, forecast data,
-                  and clean data visual summaries.
-                </p>
-                <div class="project-tech">
-                  <span><i class="ri-html5-fill"></i>HTML</span>
-                  <span><i class="ri-javascript-fill"></i>JavaScript</span>
-                  <span><i class="ri-bar-chart-box-line"></i>API</span>
+              <article class="project-card">
+                <div class="project-image image-three"></div>
+                <div class="project-content">
+                  <h4>Weather Dashboard</h4>
+                  <p>
+                    Live weather insights with multi-city search, forecast data,
+                    and clean data visual summaries.
+                  </p>
+                  <div class="project-tech">
+                    <span><i class="ri-html5-fill"></i>HTML</span>
+                    <span><i class="ri-javascript-fill"></i>JavaScript</span>
+                    <span><i class="ri-bar-chart-box-line"></i>API</span>
+                  </div>
+                  <div class="project-links">
+                    <a href="#"><i class="ri-external-link-line"></i>Live Demo</a>
+                    <a href="#"><i class="ri-github-line"></i>GitHub</a>
+                  </div>
                 </div>
-                <div class="project-links">
-                  <a href="#"><i class="ri-external-link-line"></i>Live Demo</a>
-                  <a href="#"><i class="ri-github-line"></i>GitHub</a>
-                </div>
-              </div>
-            </article>
+              </article>
+            </div>
           </div>
         </div>
       </section>
@@ -171,102 +177,135 @@
         </div>
       </section>
 
-      <section class="section ratings" id="ratings">
-        <div class="container">
-          <h3 class="section-title">Client <span>Ratings</span></h3>
-          <p class="ratings-lede">
-            Clients sign in with a personal Gmail account, leave a star rating, and a short comment.
-            Reviews appear here in real time.
-          </p>
+      <section class="section ratings ratings-section" id="ratings">
+        <div class="container ratings-page-wrap">
+          <header class="ratings-intro">
+            <h3 class="section-title ratings-intro__title">Client <span>Ratings</span></h3>
+            <p class="ratings-lede">
+              Verified Gmail reviews with Google profile photos. Sign in once to publish or edit your rating.
+            </p>
+          </header>
 
           <p id="ratings-config-banner" class="ratings-banner hidden" role="status"></p>
 
-          <div class="ratings-summary" id="ratings-summary-header">
-            <div class="ratings-score">
-              <span class="ratings-number" id="avg-rating">—</span>
-              <div
-                class="ratings-stars"
-                id="avg-stars"
-                aria-hidden="true"
-              ></div>
-            </div>
-            <p class="ratings-meta" id="ratings-count">Loading reviews…</p>
-          </div>
-
-          <div class="ratings-auth-panel">
-            <div id="ratings-signed-out">
-              <p class="ratings-auth-lede">
-                Sign in with <strong>Google using a Gmail address</strong> (@gmail.com or
-                @googlemail.com) to submit or update your rating.
-              </p>
-              <button type="button" class="btn btn-primary ratings-google-btn" id="ratings-google-btn">
-                <i class="ri-google-fill"></i>
-                Continue with Google
-              </button>
-            </div>
-
-            <div id="ratings-signed-in" class="hidden">
-              <div class="ratings-user-bar">
-                <p class="ratings-signed-in-as">
-                  Signed in as <span id="ratings-user-email"></span>
-                </p>
-                <button type="button" class="btn btn-outline btn-tight" id="ratings-sign-out">
-                  Sign out
-                </button>
+          <div class="ratings-highlight" id="ratings-summary-wrap">
+            <div class="ratings-highlight__accent" aria-hidden="true"></div>
+            <div class="ratings-highlight__inner" id="ratings-summary-header">
+              <div class="ratings-highlight__label">
+                <i class="ri-bar-chart-2-fill" aria-hidden="true"></i>
+                Overall client score
               </div>
-
-              <p id="ratings-auth-hint" class="ratings-auth-hint hidden" role="status"></p>
-
-              <form id="ratings-form" class="ratings-form" action="#ratings" novalidate>
-                <fieldset class="rating-fieldset">
-                  <legend class="ratings-form-label">Your rating</legend>
-                  <div
-                    class="rating-star-picker"
-                    role="group"
-                    aria-label="Choose from 1 to 5 stars"
-                  >
-                    <button type="button" class="rating-star-btn" data-rating-star="1" aria-pressed="false" aria-label="1 star">
-                      <i class="ri-star-fill"></i>
-                    </button>
-                    <button type="button" class="rating-star-btn" data-rating-star="2" aria-pressed="false" aria-label="2 stars">
-                      <i class="ri-star-fill"></i>
-                    </button>
-                    <button type="button" class="rating-star-btn" data-rating-star="3" aria-pressed="false" aria-label="3 stars">
-                      <i class="ri-star-fill"></i>
-                    </button>
-                    <button type="button" class="rating-star-btn" data-rating-star="4" aria-pressed="false" aria-label="4 stars">
-                      <i class="ri-star-fill"></i>
-                    </button>
-                    <button type="button" class="rating-star-btn" data-rating-star="5" aria-pressed="false" aria-label="5 stars">
-                      <i class="ri-star-fill"></i>
-                    </button>
-                  </div>
-                  <input type="hidden" id="rating-star-input" name="rating" value="" />
-                </fieldset>
-
-                <label class="ratings-form-label" for="rating-comment">Comment</label>
-                <textarea
-                  id="rating-comment"
-                  name="comment"
-                  rows="4"
-                  maxlength="2000"
-                  placeholder="Share how the collaboration went (max 2000 characters)"
-                  required
-                ></textarea>
-
-                <button type="submit" class="btn btn-primary full">
-                  <i class="ri-send-plane-fill"></i>
-                  Publish rating
-                </button>
-                <p id="ratings-form-status" class="form-status" aria-live="polite"></p>
-              </form>
+              <div class="ratings-score">
+                <span class="ratings-number" id="avg-rating">—</span>
+                <div class="ratings-stars" id="avg-stars" aria-hidden="true"></div>
+              </div>
+              <p class="ratings-meta ratings-highlight__meta" id="ratings-count">Loading reviews…</p>
             </div>
           </div>
 
-          <div class="ratings-grid" id="ratings-list"></div>
-          <p id="ratings-empty" class="ratings-empty hidden">
-            No public reviews yet. Be the first to leave one after signing in with Gmail.
-          </p>
+          <div class="ratings-main">
+            <div class="ratings-stream">
+              <div class="ratings-stream__head">
+                <h4 class="ratings-stream__title"><i class="ri-double-quotes-l" aria-hidden="true"></i> Reviews</h4>
+                <span class="ratings-stream__sub">Latest first · Gmail-verified reviewers</span>
+              </div>
+              <div class="ratings-list" id="ratings-list" role="feed" aria-busy="true" aria-label="Client reviews"></div>
+              <p id="ratings-empty" class="ratings-empty ratings-empty-panel hidden" role="status">
+                No reviews yet — sign in with Gmail on the right to publish the first one.
+              </p>
+            </div>
+
+            <aside class="ratings-sidebar">
+              <div class="ratings-auth-panel">
+                <p class="ratings-panel-label">Contributor</p>
+
+                <div id="ratings-signed-out" class="ratings-signed-out-pane">
+                  <p class="ratings-auth-lede">
+                    Use a personal <strong>@gmail.com</strong> or <strong>@googlemail.com</strong> Google account so your avatar and rating stay linked.
+                  </p>
+                  <button type="button" class="btn btn-google-cta ratings-google-btn" id="ratings-google-btn">
+                    <i class="ri-google-fill" aria-hidden="true"></i>
+                    Continue with Google
+                  </button>
+                </div>
+
+                <div id="ratings-signed-in" class="hidden">
+                  <div class="ratings-session" role="status">
+                    <div class="ratings-session-avatar" aria-hidden="true">
+                      <img
+                        class="ratings-session-photo hidden"
+                        id="ratings-session-photo"
+                        alt=""
+                        width="52"
+                        height="52"
+                        referrerpolicy="no-referrer"
+                      />
+                      <span class="ratings-session-initial" id="ratings-session-initial">?</span>
+                    </div>
+                    <div class="ratings-session-body">
+                      <span class="ratings-session-you">Signed in</span>
+                      <span class="ratings-session-email" id="ratings-user-email"></span>
+                      <button type="button" class="btn btn-outline btn-tight ratings-sign-out-inline" id="ratings-sign-out">
+                        Sign out
+                      </button>
+                    </div>
+                  </div>
+
+                  <p id="ratings-auth-hint" class="ratings-auth-hint hidden" role="status"></p>
+
+                  <form id="ratings-form" class="ratings-form" action="#ratings" novalidate>
+                    <fieldset class="rating-fieldset">
+                      <legend class="ratings-form-label">Your rating</legend>
+                      <div
+                        class="rating-star-picker"
+                        role="group"
+                        aria-label="Choose from 1 to 5 stars"
+                      >
+                        <button type="button" class="rating-star-btn" data-rating-star="1" aria-pressed="false" aria-label="1 star">
+                          <i class="ri-star-fill"></i>
+                        </button>
+                        <button type="button" class="rating-star-btn" data-rating-star="2" aria-pressed="false" aria-label="2 stars">
+                          <i class="ri-star-fill"></i>
+                        </button>
+                        <button type="button" class="rating-star-btn" data-rating-star="3" aria-pressed="false" aria-label="3 stars">
+                          <i class="ri-star-fill"></i>
+                        </button>
+                        <button type="button" class="rating-star-btn" data-rating-star="4" aria-pressed="false" aria-label="4 stars">
+                          <i class="ri-star-fill"></i>
+                        </button>
+                        <button type="button" class="rating-star-btn" data-rating-star="5" aria-pressed="false" aria-label="5 stars">
+                          <i class="ri-star-fill"></i>
+                        </button>
+                      </div>
+                      <input type="hidden" id="rating-star-input" name="rating" value="" />
+                    </fieldset>
+
+                    <label class="ratings-form-label" for="rating-comment">Your comment</label>
+                    <textarea
+                      id="rating-comment"
+                      name="comment"
+                      rows="4"
+                      maxlength="2000"
+                      placeholder="How was communication, delivery, and quality?"
+                      required
+                    ></textarea>
+
+                    <button type="submit" class="btn btn-primary full">
+                      <i class="ri-send-plane-fill" aria-hidden="true"></i>
+                      Publish or update rating
+                    </button>
+                    <div class="ratings-form-actions">
+                      <button type="button" class="btn btn-danger-ghost btn-tight" id="ratings-delete-my-review">
+                        <i class="ri-delete-bin-line" aria-hidden="true"></i>
+                        Remove my review
+                      </button>
+                    </div>
+                    <p id="ratings-form-status" class="form-status" aria-live="polite"></p>
+                  </form>
+                </div>
+              </div>
+            </aside>
+          </div>
         </div>
       </section>
 
@@ -363,6 +402,7 @@
 
         if (projectsCarousel) {
           const cards = Array.from(projectsCarousel.querySelectorAll(".project-card"));
+
           const setCenteredCard = function () {
             const box = projectsCarousel.getBoundingClientRect();
             const centerX = box.left + box.width / 2;
@@ -383,15 +423,82 @@
             if (nearestCard) nearestCard.classList.add("featured-center");
           };
 
-          setCenteredCard();
-          projectsCarousel.addEventListener("scroll", setCenteredCard, { passive: true });
-          window.addEventListener("resize", setCenteredCard);
+          const syncCarouselInsets = function () {
+            if (!cards.length) return;
+            const vw = projectsCarousel.clientWidth;
+            const cw = Math.round(cards[0].getBoundingClientRect().width);
+            if (!vw || !cw) return;
 
-          cards.forEach((card) => {
-            card.addEventListener("touchstart", function () {
-              cards.forEach((item) => item.classList.remove("featured-center"));
-              card.classList.add("featured-center");
-            });
+            var inset = Math.max(26, Math.floor((vw - cw) / 2));
+            projectsCarousel.style.paddingLeft = inset + "px";
+            projectsCarousel.style.paddingRight = inset + "px";
+            queueMicrotask(setCenteredCard);
+          };
+
+          var dragPointerId = null;
+          var dragStartClientX = 0;
+          var dragStartScroll = 0;
+          var dragging = false;
+
+          projectsCarousel.addEventListener("pointerdown", function (event) {
+            if (event.pointerType === "touch") return;
+            if (event.target.closest && event.target.closest("a, button")) return;
+
+            dragging = true;
+            dragPointerId = event.pointerId;
+            dragStartClientX = event.clientX;
+            dragStartScroll = projectsCarousel.scrollLeft;
+            projectsCarousel.classList.add("projects-carousel-dragging");
+            projectsCarousel.style.scrollSnapType = "none";
+            try {
+              projectsCarousel.setPointerCapture(event.pointerId);
+            } catch (e) {}
+          });
+
+          projectsCarousel.addEventListener("pointermove", function (event) {
+            if (!dragging || dragPointerId !== event.pointerId) return;
+            var dx = event.clientX - dragStartClientX;
+            projectsCarousel.scrollLeft = dragStartScroll - dx;
+          });
+
+          var endCarouselDrag = function (event) {
+            if (!dragging || dragPointerId !== event.pointerId) return;
+            dragging = false;
+            dragPointerId = null;
+            projectsCarousel.classList.remove("projects-carousel-dragging");
+            projectsCarousel.style.scrollSnapType = "x mandatory";
+            try {
+              projectsCarousel.releasePointerCapture(event.pointerId);
+            } catch (e) {}
+            queueMicrotask(setCenteredCard);
+          };
+
+          projectsCarousel.addEventListener("pointerup", endCarouselDrag);
+          projectsCarousel.addEventListener("pointercancel", endCarouselDrag);
+
+          if (typeof ResizeObserver !== "undefined") {
+            new ResizeObserver(syncCarouselInsets).observe(projectsCarousel);
+          }
+          window.addEventListener("resize", syncCarouselInsets);
+
+          syncCarouselInsets();
+          if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(syncCarouselInsets).catch(syncCarouselInsets);
+          }
+          projectsCarousel.addEventListener("scroll", setCenteredCard, { passive: true });
+          queueMicrotask(setCenteredCard);
+
+          cards.forEach(function (card) {
+            card.addEventListener(
+              "touchstart",
+              function () {
+                cards.forEach(function (item) {
+                  item.classList.remove("featured-center");
+                });
+                card.classList.add("featured-center");
+              },
+              { passive: true }
+            );
           });
         }
 

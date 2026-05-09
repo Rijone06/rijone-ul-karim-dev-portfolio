@@ -1,6 +1,12 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    function ratingsPhotoOk(data) {
+      return !data.keys().hasAny(['photoURL'])
+        || (data.photoURL is string && data.photoURL.size() <= 2048);
+    }
+
     match /ratings/{userId} {
       allow read: if true;
       allow create, update: if request.auth != null
@@ -14,8 +20,11 @@ service cloud.firestore {
         && request.resource.data.comment.size() >= 1
         && request.resource.data.comment.size() <= 2000
         && request.resource.data.displayName is string
-        && request.resource.data.displayName.size() <= 120;
-      allow delete: if false;
+        && request.resource.data.displayName.size() <= 120
+        && ratingsPhotoOk(request.resource.data);
+      allow delete: if request.auth != null
+        && request.auth.uid == userId
+        && request.auth.token.email.matches('.*@gmail\\.com$|.*@googlemail\\.com$');
     }
   }
 }
