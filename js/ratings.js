@@ -536,7 +536,7 @@ function initRatingsUi() {
         await setDoc(doc(db, "ratings", user.uid), payload, { merge: true });
 
         if (formStatus) {
-          formStatus.textContent = "Thank you — your rating is live on this page.";
+          formStatus.textContent = "Thanks for sharing your feedback!";
           formStatus.className = "form-status success";
         }
       } catch (err) {
