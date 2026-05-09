@@ -312,9 +312,12 @@ function initRatingsUi() {
       clearAuthHint();
     } catch (err) {
       if (formStatus) {
-        formStatus.textContent =
-          err.message ||
-          "Delete failed — check Firestore rules (owner delete + matching admin UID) and publish.";
+        var msg =
+          err && err.code === "permission-denied"
+            ? "Permission denied. In Firebase → Firestore → Rules, publish rules that allow your admin UID to delete, and ensure PORTFOLIO_ADMIN_FIREBASE_UID matches Authentication → Users."
+            : err.message ||
+              "Delete failed — check Firestore rules (owner + admin delete) and publish.";
+        formStatus.textContent = msg;
         formStatus.className = "form-status error";
       }
     }
@@ -550,7 +553,8 @@ function initRatingsUi() {
   onSnapshot(
     query(collection(db, "ratings"), orderBy("updatedAt", "desc")),
     (snapshot) => {
-      const docs = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+      // Document id last: stored fields must not overwrite Firestore doc id (breaks admin delete paths).
+      const docs = snapshot.docs.map((d) => ({ ...d.data(), id: d.id }));
 
       let sum = 0;
       let n = 0;
