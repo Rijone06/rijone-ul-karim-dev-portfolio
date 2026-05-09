@@ -381,6 +381,7 @@ function initRatingsUi() {
       }
       if (signedOut) signedOut.setAttribute("aria-hidden", "false");
       if (signedIn) signedIn.setAttribute("aria-hidden", "true");
+      if (allReviewRows.length) renderReviewsPage();
       return;
     }
 
@@ -393,6 +394,7 @@ function initRatingsUi() {
       }
       setVisible(signedOut, true);
       setVisible(signedIn, false);
+      if (allReviewRows.length) renderReviewsPage();
       return;
     }
 
@@ -405,6 +407,7 @@ function initRatingsUi() {
     }
     updateSessionChip(user, sessionPhoto, sessionInitial);
     await loadMyRating(user.uid);
+    if (allReviewRows.length) renderReviewsPage();
   });
 
   if (googleBtn) {
@@ -550,6 +553,156 @@ function initRatingsUi() {
     });
   }
 
+  var REVIEWS_PER_PAGE = 3;
+  var allReviewRows = [];
+  var reviewStartIndex = 0;
+
+  var pagerWrap = el("ratings-pager");
+  var pagerNewer = el("ratings-pager-newer");
+  var pagerOlder = el("ratings-pager-older");
+  var pagerStatus = el("ratings-pager-status");
+
+  function buildRatingCardElement(row) {
+    var currentUid = auth.currentUser ? auth.currentUser.uid : null;
+    var card = document.createElement("article");
+    card.className = "rating-card";
+
+    var top = document.createElement("div");
+    top.className = "rating-card__top";
+
+    var avWrap = document.createElement("div");
+    avWrap.className = "rating-avatar-wrap";
+    appendRatingAvatar(avWrap, row);
+
+    var bodyEl = document.createElement("div");
+    bodyEl.className = "rating-card__body";
+    var rowTop = document.createElement("div");
+    rowTop.className = "rating-card__row";
+    var stars = document.createElement("div");
+    stars.className = "rating-stars";
+    stars.setAttribute("aria-label", `${row.rating} out of 5 stars`);
+    stars.appendChild(renderStarRow(row.rating));
+
+    rowTop.appendChild(stars);
+
+    var actionWrap = document.createElement("div");
+    actionWrap.className = "rating-card__actions";
+
+    var reviewerSignedInUid = auth.currentUser ? auth.currentUser.uid : null;
+    var viewerIsPortfolioAdmin =
+      auth.currentUser && isPortfolioAdminAccount(auth.currentUser);
+
+    if (currentUid === row.id) {
+      var userDel = document.createElement("button");
+      userDel.type = "button";
+      userDel.className = "rating-delete-btn rating-delete-btn--user";
+      userDel.innerHTML =
+        '<i class="ri-delete-bin-line" aria-hidden="true"></i> Delete my review';
+      userDel.title = "Remove your rating and comment";
+      userDel.addEventListener("click", function () {
+        deleteRatingFor(row.id);
+      });
+      actionWrap.appendChild(userDel);
+    }
+
+    if (viewerIsPortfolioAdmin && reviewerSignedInUid && row.id !== reviewerSignedInUid) {
+      var adminDel = document.createElement("button");
+      adminDel.type = "button";
+      adminDel.className = "rating-admin-delete-btn";
+      adminDel.innerHTML =
+        '<i class="ri-shield-star-line" aria-hidden="true"></i> Admin remove';
+      adminDel.title = "Remove this review as site owner (portfolio admin UID)";
+      adminDel.addEventListener("click", function () {
+        deleteRatingFor(row.id);
+      });
+      actionWrap.appendChild(adminDel);
+    }
+
+    if (actionWrap.childNodes.length > 0) {
+      rowTop.appendChild(actionWrap);
+    }
+
+    bodyEl.appendChild(rowTop);
+
+    var quote = document.createElement("blockquote");
+    quote.className = "rating-quote";
+    quote.textContent = row.comment || "";
+
+    var identity = document.createElement("div");
+    identity.className = "rating-card__identity";
+
+    var nameSpan = document.createElement("span");
+    nameSpan.className = "rating-name";
+    nameSpan.textContent = row.displayName || "Verified client";
+
+    var roleSpan = document.createElement("span");
+    roleSpan.className = "rating-role";
+    roleSpan.textContent = row.email
+      ? `${maskEmail(row.email)} · Gmail verified`
+      : "Gmail verified";
+
+    identity.appendChild(nameSpan);
+    identity.appendChild(roleSpan);
+
+    top.appendChild(avWrap);
+    top.appendChild(bodyEl);
+    card.appendChild(top);
+    card.appendChild(quote);
+    card.appendChild(identity);
+    return card;
+  }
+
+  function clampReviewStartIndex() {
+    if (allReviewRows.length <= REVIEWS_PER_PAGE) {
+      reviewStartIndex = 0;
+      return;
+    }
+    var maxStart = allReviewRows.length - REVIEWS_PER_PAGE;
+    if (reviewStartIndex > maxStart) {
+      reviewStartIndex = maxStart;
+    }
+  }
+
+  function updatePagerUi() {
+    if (!pagerWrap || !pagerStatus) return;
+    var total = allReviewRows.length;
+    if (total <= REVIEWS_PER_PAGE) {
+      pagerWrap.classList.add("hidden");
+      return;
+    }
+    pagerWrap.classList.remove("hidden");
+    var start = reviewStartIndex;
+    var end = Math.min(start + REVIEWS_PER_PAGE, total);
+    pagerStatus.textContent = "Showing " + (start + 1) + "–" + end + " of " + total;
+    if (pagerNewer) pagerNewer.disabled = start <= 0;
+    if (pagerOlder) pagerOlder.disabled = start + REVIEWS_PER_PAGE >= total;
+  }
+
+  function renderReviewsPage() {
+    if (!list) return;
+    list.innerHTML = "";
+    var slice = allReviewRows.slice(reviewStartIndex, reviewStartIndex + REVIEWS_PER_PAGE);
+    slice.forEach(function (row) {
+      list.appendChild(buildRatingCardElement(row));
+    });
+    list.setAttribute("aria-busy", "false");
+    updatePagerUi();
+  }
+
+  if (pagerNewer) {
+    pagerNewer.addEventListener("click", function () {
+      reviewStartIndex = Math.max(0, reviewStartIndex - REVIEWS_PER_PAGE);
+      renderReviewsPage();
+    });
+  }
+  if (pagerOlder) {
+    pagerOlder.addEventListener("click", function () {
+      var maxStart = Math.max(0, allReviewRows.length - REVIEWS_PER_PAGE);
+      reviewStartIndex = Math.min(maxStart, reviewStartIndex + REVIEWS_PER_PAGE);
+      renderReviewsPage();
+    });
+  }
+
   onSnapshot(
     query(collection(db, "ratings"), orderBy("updatedAt", "desc")),
     (snapshot) => {
@@ -578,110 +731,24 @@ function initRatingsUi() {
       if (countMeta) {
         countMeta.textContent =
           n === 0
-            ? "No verified reviews yet — add yours from the sidebar."
+            ? "No verified reviews yet — add yours below."
             : `${n} verified review${n === 1 ? "" : "s"} · live average`;
       }
 
       if (!list) return;
-      list.innerHTML = "";
-      list.setAttribute("aria-busy", "false");
+
+      allReviewRows = docs;
+      clampReviewStartIndex();
 
       if (docs.length === 0) {
+        list.innerHTML = "";
+        list.setAttribute("aria-busy", "false");
+        if (pagerWrap) pagerWrap.classList.add("hidden");
         setVisible(emptyState, true);
         return;
       }
       setVisible(emptyState, false);
-
-      const currentUid = auth.currentUser ? auth.currentUser.uid : null;
-
-      docs.forEach(function (row) {
-        var card = document.createElement("article");
-        card.className = "rating-card";
-
-        var top = document.createElement("div");
-        top.className = "rating-card__top";
-
-        var avWrap = document.createElement("div");
-        avWrap.className = "rating-avatar-wrap";
-        appendRatingAvatar(avWrap, row);
-
-        var bodyEl = document.createElement("div");
-        bodyEl.className = "rating-card__body";
-        var rowTop = document.createElement("div");
-        rowTop.className = "rating-card__row";
-        var stars = document.createElement("div");
-        stars.className = "rating-stars";
-        stars.setAttribute("aria-label", `${row.rating} out of 5 stars`);
-        stars.appendChild(renderStarRow(row.rating));
-
-        rowTop.appendChild(stars);
-
-        var actionWrap = document.createElement("div");
-        actionWrap.className = "rating-card__actions";
-
-        var reviewerSignedInUid = auth.currentUser ? auth.currentUser.uid : null;
-        var viewerIsPortfolioAdmin =
-          auth.currentUser && isPortfolioAdminAccount(auth.currentUser);
-
-        if (currentUid === row.id) {
-          var userDel = document.createElement("button");
-          userDel.type = "button";
-          userDel.className = "rating-delete-btn rating-delete-btn--user";
-          userDel.innerHTML =
-            '<i class="ri-delete-bin-line" aria-hidden="true"></i> Delete my review';
-          userDel.title = "Remove your rating and comment";
-          userDel.addEventListener("click", function () {
-            deleteRatingFor(row.id);
-          });
-          actionWrap.appendChild(userDel);
-        }
-
-        if (viewerIsPortfolioAdmin && reviewerSignedInUid && row.id !== reviewerSignedInUid) {
-          var adminDel = document.createElement("button");
-          adminDel.type = "button";
-          adminDel.className = "rating-admin-delete-btn";
-          adminDel.innerHTML =
-            '<i class="ri-shield-star-line" aria-hidden="true"></i> Admin remove';
-          adminDel.title = "Remove this review as site owner (portfolio admin UID)";
-          adminDel.addEventListener("click", function () {
-            deleteRatingFor(row.id);
-          });
-          actionWrap.appendChild(adminDel);
-        }
-
-        if (actionWrap.childNodes.length > 0) {
-          rowTop.appendChild(actionWrap);
-        }
-
-        bodyEl.appendChild(rowTop);
-
-        var quote = document.createElement("blockquote");
-        quote.className = "rating-quote";
-        quote.textContent = row.comment || "";
-
-        var identity = document.createElement("div");
-        identity.className = "rating-card__identity";
-
-        var nameSpan = document.createElement("span");
-        nameSpan.className = "rating-name";
-        nameSpan.textContent = row.displayName || "Verified client";
-
-        var roleSpan = document.createElement("span");
-        roleSpan.className = "rating-role";
-        roleSpan.textContent = row.email
-          ? `${maskEmail(row.email)} · Gmail verified`
-          : "Gmail verified";
-
-        identity.appendChild(nameSpan);
-        identity.appendChild(roleSpan);
-
-        top.appendChild(avWrap);
-        top.appendChild(bodyEl);
-        card.appendChild(top);
-        card.appendChild(quote);
-        card.appendChild(identity);
-        list.appendChild(card);
-      });
+      renderReviewsPage();
     },
     (err) => {
       if (countMeta) {

@@ -207,11 +207,24 @@
             <div class="ratings-stream">
               <div class="ratings-stream__head">
                 <h4 class="ratings-stream__title"><i class="ri-double-quotes-l" aria-hidden="true"></i> Reviews</h4>
-                <span class="ratings-stream__sub">Based on verified client feedback</span>
+                <span class="ratings-stream__sub">Newest first · up to three at a time</span>
               </div>
+
+              <div id="ratings-pager" class="ratings-pager hidden" aria-label="Browse review pages">
+                <button type="button" class="ratings-pager-btn" id="ratings-pager-newer">
+                  <i class="ri-arrow-up-s-line" aria-hidden="true"></i>
+                  <span>Newer</span>
+                </button>
+                <p class="ratings-pager-status" id="ratings-pager-status" role="status"></p>
+                <button type="button" class="ratings-pager-btn" id="ratings-pager-older">
+                  <span>Older</span>
+                  <i class="ri-arrow-down-s-line" aria-hidden="true"></i>
+                </button>
+              </div>
+
               <div class="ratings-list" id="ratings-list" role="feed" aria-busy="true" aria-label="Client reviews"></div>
               <p id="ratings-empty" class="ratings-empty ratings-empty-panel hidden" role="status">
-                No reviews yet — Sign In with Gmail on the right to publish the first one.
+                No reviews yet — sign in with Gmail below to publish the first one.
               </p>
             </div>
 

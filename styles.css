@@ -593,21 +593,18 @@ a {
 }
 
 .ratings-main {
-  display: grid;
-  gap: 1.25rem;
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  align-items: stretch;
 }
 
-@media (min-width: 901px) {
-  .ratings-main {
-    grid-template-columns: minmax(0, 1fr) minmax(274px, 308px);
-    gap: 1.6rem;
-  }
-
-  .ratings-sidebar {
-    position: sticky;
-    top: 4.75rem;
-  }
+.ratings-sidebar {
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  padding-top: 1.35rem;
+  border-top: 1px solid rgba(68, 104, 156, 0.32);
 }
 
 .ratings-stream__head {
@@ -640,11 +637,68 @@ a {
   text-transform: uppercase;
 }
 
+.ratings-pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  margin: 0.35rem 0 1rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: 10px;
+  border: 1px solid rgba(78, 118, 172, 0.35);
+  background: rgba(10, 22, 42, 0.55);
+}
+
+.ratings-pager-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  padding: 0.36rem 0.55rem;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 211, 255, 0.35);
+  background: rgba(12, 28, 50, 0.85);
+  color: #a8d9f5;
+  font-size: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.ratings-pager-btn:hover:not(:disabled),
+.ratings-pager-btn:focus-visible:not(:disabled) {
+  border-color: var(--cyan);
+  color: var(--text);
+  background: rgba(16, 40, 68, 0.95);
+  outline: none;
+}
+
+.ratings-pager-btn:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.ratings-pager-btn i {
+  font-size: 1rem;
+}
+
+.ratings-pager-status {
+  margin: 0;
+  min-width: 9rem;
+  text-align: center;
+  font-size: 0.5rem;
+  color: #9bb4d9;
+  font-variant-numeric: tabular-nums;
+}
+
 .ratings-list {
   display: flex;
   flex-direction: column;
   gap: 0.78rem;
-  min-height: 2rem;
+  min-height: 8rem;
 }
 
 .rating-card {
@@ -1312,11 +1366,6 @@ a {
   }
 
   .about-content p {
-    margin-inline: auto;
-  }
-
-  .ratings-sidebar {
-    max-width: 400px;
     margin-inline: auto;
   }
 }
