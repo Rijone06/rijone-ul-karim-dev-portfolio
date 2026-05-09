@@ -418,6 +418,22 @@ a {
   display: none;
 }
 
+.form-status {
+  margin-top: 0.4rem;
+  min-height: 0.85rem;
+  font-size: 0.5rem;
+  color: #94accd;
+  text-align: center;
+}
+
+.form-status.success {
+  color: #5ee6b6;
+}
+
+.form-status.error {
+  color: #ff8f9f;
+}
+
 .contact-form input,
 .contact-form textarea {
   width: 100%;

@@ -177,8 +177,10 @@
             Have a project in mind? Let's work together!
           </p>
           <form
+            id="contact-form"
             class="contact-form"
-            action="https://api.web3forms.com/submit"
+            action="#contact"
+            data-endpoint="https://api.web3forms.com/submit"
             method="post"
           >
             <input type="hidden" name="access_key" value="e8f2d8c7-7b23-467a-9088-9d6a3bd0b7e5" />
@@ -219,6 +221,7 @@
             <button type="submit" class="btn btn-primary full">
               <i class="ri-send-plane-fill"></i> Send Message
             </button>
+            <p id="form-status" class="form-status" aria-live="polite"></p>
           </form>
 
           <div class="socials">
@@ -244,16 +247,59 @@
     <script>
       (function () {
         const cvBtn = document.getElementById("download-cv-btn");
-        if (!cvBtn) return;
+        const contactForm = document.getElementById("contact-form");
+        const formStatus = document.getElementById("form-status");
 
         const isMobile = /Android|iPhone|iPad|iPod|IEMobile|Opera Mini/i.test(
           navigator.userAgent
         );
 
-        if (isMobile) {
+        if (cvBtn && isMobile) {
           cvBtn.removeAttribute("download");
           cvBtn.setAttribute("target", "_blank");
           cvBtn.setAttribute("rel", "noopener noreferrer");
+        }
+
+        if (contactForm) {
+          contactForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            if (formStatus) {
+              formStatus.textContent = "Sending your message...";
+              formStatus.className = "form-status";
+            }
+
+            const formData = new FormData(contactForm);
+
+            try {
+              const response = await fetch(contactForm.dataset.endpoint, {
+                method: "POST",
+                body: formData,
+                headers: {
+                  Accept: "application/json",
+                },
+              });
+
+              const result = await response.json();
+
+              if (result.success) {
+                if (formStatus) {
+                  formStatus.textContent =
+                    "Thank you for your response. I will get back to you very shortly by email.";
+                  formStatus.className = "form-status success";
+                }
+                contactForm.reset();
+              } else {
+                throw new Error(result.message || "Failed to send message.");
+              }
+            } catch (error) {
+              if (formStatus) {
+                formStatus.textContent =
+                  "Sorry, your message could not be sent right now. Please try again.";
+                formStatus.className = "form-status error";
+              }
+            }
+          });
         }
       })();
     </script>
